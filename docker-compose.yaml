@@ -1,0 +1,25 @@
+
+services:
+
+  app:
+    build:
+      context: ./app
+
+    image: autoheal-app:1.0
+
+    container_name: autoheal-app
+
+    ports:
+      - "5000:5000"
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+
+      interval: 10s
+      timeout: 3s
+      retries: 3
+

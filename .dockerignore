@@ -1,0 +1,44 @@
+
+# Git
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Tests
+tests/
+
+# Documentation
+README.md
+
+# Terraform state and local files
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+# OS files
+.DS_Store
+Thumbs.db
+

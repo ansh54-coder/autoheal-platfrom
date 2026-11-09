@@ -1,0 +1,94 @@
+
+apiVersion: v1
+kind: ServiceAccount
+
+metadata:
+  name: autoheal-controller
+  namespace: default
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+
+metadata:
+  name: autoheal-controller
+  namespace: default
+
+rules:
+  - apiGroups: [""]
+
+    resources:
+      - pods
+
+    verbs:
+      - get
+      - list
+      - watch
+      - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: autoheal-controller
+  namespace: default
+
+subjects:
+  - kind: ServiceAccount
+    name: autoheal-controller
+    namespace: default
+
+roleRef:
+  kind: Role
+
+  name: autoheal-controller
+
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: autoheal-controller
+  namespace: default
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: autoheal-controller
+
+  template:
+    metadata:
+      labels:
+        app: autoheal-controller
+
+    spec:
+      serviceAccountName: autoheal-controller
+
+      containers:
+        - name: controller
+
+          image: autoheal-controller:1.0
+
+          imagePullPolicy: IfNotPresent
+
+          env:
+            - name: NAMESPACE
+              value: default
+
+            - name: LABEL_SELECTOR
+              value: app=autoheal
+
+            - name: POLL_SECONDS
+              value: "10"
+
+            - name: UNREADY_GRACE_SECONDS
+              value: "30"
+
+            - name: DRY_RUN
+              value: "false"
+
